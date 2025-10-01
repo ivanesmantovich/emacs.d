@@ -55,5 +55,13 @@
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package reverse-im
+  :demand t
+  :custom
+  (reverse-im-input-methods '("russian-computer"))
+  (reverse-im-cache-file (locate-user-emacs-file "reverse-im-cache.el"))
+  :config
+  (reverse-im-mode t))
+
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
