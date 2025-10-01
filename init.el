@@ -20,6 +20,9 @@
 (blink-cursor-mode 0)					     ; disable blinking
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
 (load custom-file 'noerror)				     ; redirect custom
+(repeat-mode 1)						     ; enable repeat
+
+(global-set-key (kbd "s-e") 'eval-buffer)
 
 ;; face
 (set-face-attribute 'default nil :family "TX-02" :height 160)
@@ -38,18 +41,12 @@
 (setq use-package-always-ensure t)
 
 (use-package modus-themes
-  :vc (:url "https://github.com/protesilaos/modus-themes.git"
+  :vc (:url "https://github.com/protesilaos/modus-themes"
        :rev "4.8.0")
   :config
 ;   (load-theme 'modus-operandi-tinted :no-confirm))
   (load-theme 'modus-vivendi-tinted :no-confirm))
 
-;; TODO: use alegreya in org https://fonts.google.com/specimen/Alegreya
-;; org
-(add-hook 'org-mode-hook 'visual-line-mode)
-(setq org-image-actual-width 800)
-
-;; magit
 (use-package magit
   :bind (("s-g" . magit-status))
   :config
@@ -63,5 +60,30 @@
   :config
   (reverse-im-mode t))
 
+(use-package avy
+  :bind (("C-;" . avy-goto-char)
+         ("C-'" . avy-goto-char-2)
+         ("M-g f" . avy-goto-line)
+         ("M-g w" . avy-goto-word-1)))
+
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
+
+;; org
+(defun my-org-font-setup ()
+  "Use Alegreya in org-mode buffers."
+  (face-remap-add-relative 'default :family "Alegreya" :height 200))
+(use-package org
+  :hook ((org-mode . my-org-font-setup)
+	 (org-mode . visual-line-mode))
+  :custom
+  (org-image-actual-width 800)
+  (org-startup-with-inline-images t)
+  :config
+  (custom-set-faces
+   '(org-level-1 ((t (:family "Alegreya" :height 220))))
+   '(org-level-2 ((t (:family "Alegreya" :height 210))))
+   '(org-level-3 ((t (:family "Alegreya" :height 200))))
+   '(org-block ((t (:family "TX-02" :height 160))))
+   '(org-code ((t (:family "TX-02" :height 160))))
+   '(org-verbatim ((t (:family "TX-02" :height 160))))))
