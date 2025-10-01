@@ -13,15 +13,17 @@
 ;; setup
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
-(setq native-comp-async-report-warnings-errors 'silent)
-(setq byte-compile-warnings nil)
-(setq make-backup-files nil)
-(setq ring-bell-function 'ignore)
-(blink-cursor-mode 0)
+(setq native-comp-async-report-warnings-errors 'silent)      ; silence byte-compilation
+(setq byte-compile-warnings nil)                             ; silence byte-compilation
+(setq make-backup-files nil)		                     ; disable backup
+(setq ring-bell-function 'ignore)	                     ; disable bell
+(blink-cursor-mode 0)					     ; disable blinking
+(setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
+(load custom-file 'noerror)				     ; redirect custom
 
 ;; face
-(set-face-attribute 'default nil :family "TX-02" :height 160) ; code
-(set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; code, cyrillic fallback
+(set-face-attribute 'default nil :family "TX-02" :height 160)
+(set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
 ;; package
 (require 'package)
@@ -47,9 +49,11 @@
 (add-hook 'org-mode-hook 'visual-line-mode)
 (setq org-image-actual-width 800)
 
+;; magit
+(use-package magit
+  :bind (("s-g" . magit-status))
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
-
-;; redirect custom
-(setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
-(load custom-file 'noerror)
