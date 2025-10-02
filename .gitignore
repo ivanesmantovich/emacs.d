@@ -3,6 +3,10 @@
 /auto-save-list
 /eshell
 /transient
+/tree-sitter
+/url
 
-.DS_Store
+history
+custom.el
 reverse-im-cache.el
+.DS_Store

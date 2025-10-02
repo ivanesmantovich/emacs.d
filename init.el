@@ -22,10 +22,11 @@
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
 (load custom-file 'noerror)				     ; redirect custom
 (repeat-mode 1)						     ; enable repeat
+(electric-pair-mode 1)
+(savehist-mode 1)
+(setq enable-recursive-minibuffers t)
 
-(setq gs-cons-threshold (* 100 1024 1024))
-
-(global-set-key (kbd "s-e") 'eval-buffer)
+(setq gs-cons-threshold (* 100 1024 1024)) ; gc tweak, keep it simple. gcmh package is an alternative
 
 ;; face
 (set-face-attribute 'default nil :family "TX-02" :height 160)
@@ -42,12 +43,6 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-;; Replace gs-cons-threshold with this if necessary
-;; (use-package gcmh
-;;   :demand t
-;;   :config
-;;   (gcmh-mode 1))
 
 (use-package modus-themes
   :vc (:url "https://github.com/protesilaos/modus-themes"
@@ -124,7 +119,6 @@
        :rev "2.3")
   :init
   (global-corfu-mode)
-  :config
   (add-to-list 'load-path (expand-file-name "corfu/extensions" package-user-dir))
   (require 'corfu-popupinfo)
   (corfu-popupinfo-mode)
@@ -133,3 +127,20 @@
   (corfu-auto-delay 0.2)
   (corfu-popupinfo-delay 0.5)
   (corfu-quit-no-match t))
+
+(use-package vertico
+  :vc (:url "https://github.com/minad/vertico"
+       :rev "2.5")
+  :custom
+  (vertico-cycle t)
+  ;; Hide commands in M-x which do not work in the current mode
+  ;; I dont want to enable it while i'm just starting to explore.
+  ;;  (read-extended-command-predicate #'command-completion-default-include-p)
+  :init
+  (vertico-mode))
+
+;; my modes
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(require 'seashell)
+(seashell-minor-mode 1)
