@@ -6,6 +6,7 @@
       (unless (string-match-p (regexp-quote dir) path)
         (setenv "PATH" (concat dir ":" path))))))
 
+(my/add-to-paths "/opt/homebrew/bin")
 (my/add-to-paths "/opt/homebrew/opt/coreutils/libexec/gnubin")
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
@@ -21,6 +22,8 @@
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
 (load custom-file 'noerror)				     ; redirect custom
 (repeat-mode 1)						     ; enable repeat
+
+(setq gs-cons-threshold (* 100 1024 1024))
 
 (global-set-key (kbd "s-e") 'eval-buffer)
 
@@ -39,6 +42,12 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; Replace gs-cons-threshold with this if necessary
+;; (use-package gcmh
+;;   :demand t
+;;   :config
+;;   (gcmh-mode 1))
 
 (use-package modus-themes
   :vc (:url "https://github.com/protesilaos/modus-themes"
@@ -87,3 +96,25 @@
    '(org-block ((t (:family "TX-02" :height 160))))
    '(org-code ((t (:family "TX-02" :height 160))))
    '(org-verbatim ((t (:family "TX-02" :height 160))))))
+
+(setq treesit-language-source-alist
+      '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (css "https://github.com/tree-sitter/tree-sitter-css" "master" "src")
+        (html "https://github.com/tree-sitter/tree-sitter-html" "master" "src")))
+
+;; treesitter
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-ts-mode))
+
+;; eglot
+(setq eglot-autoshutdown t)
+(setq eglot-events-buffer-size 0)
+(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+(add-hook 'tsx-ts-mode-hook 'eglot-ensure)
+(add-hook 'js-ts-mode-hook 'eglot-ensure)
+(add-hook 'html-mode-hook 'eglot-ensure)
+(add-hook 'css-mode-hook 'eglot-ensure)
