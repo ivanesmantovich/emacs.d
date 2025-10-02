@@ -118,3 +118,18 @@
 (add-hook 'js-ts-mode-hook 'eglot-ensure)
 (add-hook 'html-mode-hook 'eglot-ensure)
 (add-hook 'css-mode-hook 'eglot-ensure)
+
+(use-package corfu
+  :vc (:url "https://github.com/minad/corfu"
+       :rev "2.3")
+  :init
+  (global-corfu-mode)
+  :config
+  (add-to-list 'load-path (expand-file-name "corfu/extensions" package-user-dir))
+  (require 'corfu-popupinfo)
+  (corfu-popupinfo-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-popupinfo-delay 0.5)
+  (corfu-quit-no-match t))
