@@ -139,6 +139,12 @@
   :init
   (vertico-mode))
 
+;; TODO: research the readme configuration https://github.com/minad/consult/tags
+(use-package consult
+  :vc (:url "https://github.com/minad/consult.git"
+	    :rev "2.8")
+  :bind ((("C-," . consult-buffer))))
+
 ;; my modes
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 

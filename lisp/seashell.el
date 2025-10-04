@@ -28,7 +28,6 @@ If already at indentation, delete the indentation without saving to kill ring."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "s-e") 'eval-buffer)
     (define-key map (kbd "C-o") 'other-window)
-    (define-key map (kbd "C-,") 'switch-to-buffer)
     (define-key map (kbd "M-s-w") 'duplicate-dwim)
     (define-key map (kbd "C-s-k") 'kill-whole-line)
 
