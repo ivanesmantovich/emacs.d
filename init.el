@@ -11,6 +11,8 @@
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
 
+(add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
+
 ;; setup
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
