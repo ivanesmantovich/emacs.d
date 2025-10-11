@@ -39,7 +39,9 @@ If already at indentation, delete the indentation without saving to kill ring."
 (define-key key-translation-map (kbd "s-c") (kbd "M-w"))
 (define-key key-translation-map (kbd "s-v") (kbd "C-y"))
 
-;; Custom keybindings via minor mode (overrides major modes)
+;; Keymaps that I need to work anywhere.
+;; If I override a mapping from some mode that i want to use, then I will map it to my liking.
+;; Otherwise, I never need to worry about keymap conflicts.
 (defvar seashell-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "s-e") 'eval-buffer)
@@ -48,6 +50,20 @@ If already at indentation, delete the indentation without saving to kill ring."
     (define-key map (kbd "s-k") 'kill-whole-line)
     (define-key map (kbd "C-a") 'my/smart-beginning-of-line)
     (define-key map (kbd "s-<backspace>") 'my/kill-to-indentation)
+    
+    (define-key map (kbd "s-g") 'magit-status)
+       
+    (define-key map (kbd "C-;") 'avy-goto-char)
+    (define-key map (kbd "C-'") 'avy-goto-char-2)
+    (define-key map (kbd "M-g l") 'avy-goto-line)
+    
+    (define-key map (kbd "C-,") 'consult-buffer)
+    (define-key map (kbd "M-s f") 'consult-fd)
+    (define-key map (kbd "M-s g") 'consult-ripgrep)
+    (define-key map (kbd "M-g r") 'consult-recent-file)
+    
+    (define-key map (kbd "C-.") 'embark-act)
+    (define-key map (kbd "M-.") 'embark-dwim)
     map)
   "My personal keybindings that override all modes.")
 

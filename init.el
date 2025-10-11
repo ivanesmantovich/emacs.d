@@ -13,6 +13,13 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
 
+(blink-cursor-mode 0)
+(scroll-bar-mode -1)
+(repeat-mode 1)
+(electric-pair-mode 1)
+(savehist-mode 1)
+(recentf-mode 1)
+
 ;; setup
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
@@ -20,18 +27,14 @@
 (setq byte-compile-warnings nil)                             ; silence byte-compilation
 (setq make-backup-files nil)		                     ; disable backup
 (setq ring-bell-function 'ignore)	                     ; disable bell
-(blink-cursor-mode 0)					     ; disable blinking
+(setq enable-recursive-minibuffers t)
+(setq gs-cons-threshold (* 100 1024 1024))                   ; gc tweak, keep it simple. gcmh package is an alternative
+(setq recentf-max-saved-items 500)
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
 (load custom-file 'noerror)				     ; redirect custom
-(repeat-mode 1)						     ; enable repeat
-(electric-pair-mode 1)
-(savehist-mode 1)
-(setq enable-recursive-minibuffers t)
-
-(setq gs-cons-threshold (* 100 1024 1024)) ; gc tweak, keep it simple. gcmh package is an alternative
 
 ;; face
-(set-face-attribute 'default nil :family "TX-02" :height 160)
+(set-face-attribute 'default nil :family "TX-02" :height 170)
 (set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
 ;; package
@@ -50,11 +53,10 @@
   :vc (:url "https://github.com/protesilaos/modus-themes"
        :rev "4.8.0")
   :config
-;   (load-theme 'modus-operandi-tinted :no-confirm))
+;  (load-theme 'modus-operandi-tinted :no-confirm))
   (load-theme 'modus-vivendi-tinted :no-confirm))
 
 (use-package magit
-  :bind (("s-g" . magit-status))
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
@@ -66,11 +68,7 @@
   :config
   (reverse-im-mode t))
 
-(use-package avy
-  :bind (("C-;" . avy-goto-char)
-         ("C-'" . avy-goto-char-2)
-         ("M-g f" . avy-goto-line)
-         ("M-g w" . avy-goto-word-1)))
+(use-package avy)
 
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
@@ -94,14 +92,13 @@
    '(org-code ((t (:family "TX-02" :height 160))))
    '(org-verbatim ((t (:family "TX-02" :height 160))))))
 
+;; treesitter
 (setq treesit-language-source-alist
       '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
         (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
         (css "https://github.com/tree-sitter/tree-sitter-css" "master" "src")
         (html "https://github.com/tree-sitter/tree-sitter-html" "master" "src")))
-
-;; treesitter
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
@@ -135,20 +132,38 @@
        :rev "2.5")
   :custom
   (vertico-cycle t)
+  (vertico-count 20)
   ;; Hide commands in M-x which do not work in the current mode
   ;; I dont want to enable it while i'm just starting to explore.
   ;;  (read-extended-command-predicate #'command-completion-default-include-p)
   :init
   (vertico-mode))
 
-;; TODO: research the readme configuration https://github.com/minad/consult/tags
+;; TODO: research the readme configuration https://github.com/minad/consult
 (use-package consult
-  :vc (:url "https://github.com/minad/consult.git"
-	    :rev "2.8")
-  :bind ((("C-," . consult-buffer))))
+  :vc (:url "https://github.com/minad/consult"
+       :rev "2.8"))
+
+(use-package embark)
+
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package orderless
+  :vc (:url "https://github.com/oantolin/orderless"
+       :rev "1.5")
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package which-key
+  :config
+  (which-key-mode 1)
+  (setq which-key-idle-delay 0.5)
+  (setq which-key-popup-type 'minibuffer))
 
 ;; my modes
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
 (require 'seashell)
 (seashell-minor-mode 1)
