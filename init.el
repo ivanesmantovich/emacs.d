@@ -137,11 +137,16 @@
   :custom
   (vertico-cycle t)
   (vertico-count 20)
-  ;; Hide commands in M-x which do not work in the current mode
-  ;; I dont want to enable it while i'm just starting to explore.
-  ;;  (read-extended-command-predicate #'command-completion-default-include-p)
   :init
-  (vertico-mode))
+  (vertico-mode)
+  :config
+  (add-to-list 'load-path (expand-file-name "vertico/extensions" package-user-dir))
+  (require 'vertico-multiform)
+  (require 'vertico-sort)
+  (vertico-multiform-mode)
+  (setq vertico-multiform-commands
+	'((execute-extended-command
+	   (vertico-sort-function . vertico-sort-history-length-alpha)))))
 
 ;; TODO: integrate consult-compile-error and consult-flymake as well https://github.com/minad/consult?tab=readme-ov-file#compilation
 (use-package consult
@@ -163,6 +168,12 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
+ 
+(use-package marginalia
+  :vc (:url "https://github.com/minad/marginalia"
+       :rev "2.3")
+  :init
+  (marginalia-mode))
 
 (use-package which-key
   :config
