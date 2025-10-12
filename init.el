@@ -53,8 +53,7 @@
   :vc (:url "https://github.com/protesilaos/modus-themes"
        :rev "4.8.0")
   :config
-;  (load-theme 'modus-operandi-tinted :no-confirm))
-  (load-theme 'modus-vivendi-tinted :no-confirm))
+  (load-theme 'modus-operandi-tinted :no-confirm))
 
 (use-package magit
   :config
@@ -144,10 +143,13 @@
   :init
   (vertico-mode))
 
-;; TODO: research the readme configuration https://github.com/minad/consult
+;; TODO: integrate consult-compile-error and consult-flymake as well https://github.com/minad/consult?tab=readme-ov-file#compilation
 (use-package consult
   :vc (:url "https://github.com/minad/consult"
-       :rev "2.8"))
+	    :rev "2.8")
+  :config
+  (setq xref-show-xrefs-function #'consult-xref ; use consult to view xref locations
+	xref-show-definitions-function #'consult-xref))
 
 (use-package embark)
 
@@ -167,6 +169,12 @@
   (which-key-mode 1)
   (setq which-key-idle-delay 0.5)
   (setq which-key-popup-type 'minibuffer))
+
+;; show xref at the bottom
+(add-to-list 'display-buffer-alist
+             '("\\*xref\\*"
+               (display-buffer-at-bottom)
+               (window-height . 0.25)))
 
 ;; my modes
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
