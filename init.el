@@ -149,6 +149,7 @@
 	   (vertico-sort-function . vertico-sort-history-length-alpha)))))
 
 ;; TODO: integrate consult-compile-error and consult-flymake as well https://github.com/minad/consult?tab=readme-ov-file#compilation
+;; TODO: create a separate command with --base passed to consult-fd-args to search only for filenames.
 (use-package consult
   :vc (:url "https://github.com/minad/consult"
 	    :rev "2.8")
@@ -186,6 +187,14 @@
              '("\\*xref\\*"
                (display-buffer-at-bottom)
                (window-height . 0.25)))
+
+;; project.el tweaks
+(defun my-project-try-local (dir)
+  "Check if DIR contains a .project file."
+  (let ((root (locate-dominating-file dir ".project")))
+    (when root
+      (cons 'transient root))))
+(add-hook 'project-find-functions #'my-project-try-local nil nil) ;; Add to the BEGINNING of project-find-functions
 
 ;; my modes
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
