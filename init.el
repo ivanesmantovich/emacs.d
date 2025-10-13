@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 (defun my/add-to-paths (dir)
   "Add DIR to both exec-path and PATH environment variable if it exists."
   (when (file-directory-p dir)
@@ -154,6 +156,7 @@
   :vc (:url "https://github.com/minad/consult"
 	    :rev "2.8")
   :config
+  (require 'consult-compile)
   (setq xref-show-xrefs-function #'consult-xref ; use consult to view xref locations
 	xref-show-definitions-function #'consult-xref))
 
@@ -182,6 +185,12 @@
   (setq which-key-idle-delay 0.5)
   (setq which-key-popup-type 'minibuffer))
 
+(use-package diminish
+  :config
+  (diminish 'which-key-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'eldoc-mode))
+
 ;; show xref at the bottom
 (add-to-list 'display-buffer-alist
              '("\\*xref\\*"
@@ -194,7 +203,22 @@
   (let ((root (locate-dominating-file dir ".project")))
     (when root
       (cons 'transient root))))
-(add-hook 'project-find-functions #'my-project-try-local nil nil) ;; Add to the BEGINNING of project-find-functions
+(add-hook 'project-find-functions #'my-project-try-local nil nil) ;; add to the beginning of project-find-functions
+
+;; shell.el tweaks
+(add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
+
+;; compile.el tweaks
+(with-eval-after-load 'compile
+  ;; RSBuild/Webpack TypeScript errors
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(rsbuild-typescript
+                 "^ERROR in \\([^
+]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                 1 2 3 2))
+  (add-to-list 'compilation-error-regexp-alist 'rsbuild-typescript)
+  (require 'ansi-color)
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
 ;; my modes
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
