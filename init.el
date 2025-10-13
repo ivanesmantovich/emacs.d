@@ -239,3 +239,5 @@
 ;; my modes
 (require 'seashell)
 (seashell-minor-mode 1)
+
+(require 'my-commands)
