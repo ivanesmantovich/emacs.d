@@ -41,6 +41,8 @@
 (set-face-attribute 'default nil :family "TX-02" :height 170)
 (set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
+;; note to self: use deepwiki and claude to understand any package. happy hacking!
+
 ;; package
 (require 'package)
 (setq package-archives

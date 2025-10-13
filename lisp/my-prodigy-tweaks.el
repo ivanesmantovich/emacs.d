@@ -33,5 +33,19 @@
 (add-hook 'prodigy-process-on-output-hook
           (my/clear-prodigy-buffer-hook 'rsbuild "^start   "))
 
+(defun my/prodigy-start-and-show ()
+  "Start service and display its output after a short delay."
+  (interactive)
+  (let* ((service (prodigy-service-at-pos))
+         (buffer-name (my/get-prodigy-buffer-name service)))
+    (prodigy-start)
+    (run-with-timer 1.0 nil
+                    (lambda ()
+                      (when-let ((buf (get-buffer buffer-name)))
+                        (save-selected-window
+                          (display-buffer buf)))))))
+
+(define-key prodigy-mode-map "s" 'my/prodigy-start-and-show)
+
 (provide 'my-prodigy-tweaks)
 ;;; my-prodigy-tweaks.el ends here
