@@ -9,9 +9,11 @@
         (setenv "PATH" (concat dir ":" path))))))
 
 (my/add-to-paths "/opt/homebrew/bin")
+(my/add-to-paths (expand-file-name "~/.local/share/fnm/aliases/default/bin")) ; fnm bin dir
 (my/add-to-paths "/opt/homebrew/opt/coreutils/libexec/gnubin")
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
 
@@ -55,7 +57,7 @@
   :vc (:url "https://github.com/protesilaos/modus-themes"
        :rev "4.8.0")
   :config
-  (load-theme 'modus-operandi-tinted :no-confirm))
+  (load-theme 'modus-vivendi-tinted :no-confirm))
 
 (use-package magit
   :config
@@ -179,6 +181,13 @@
   :init
   (marginalia-mode))
 
+(use-package prodigy
+  :config
+  (add-hook 'prodigy-view-mode-hook
+	    (lambda ()
+	      (compilation-minor-mode 1)))
+  (require 'my-prodigy-tweaks))
+
 (use-package which-key
   :config
   (which-key-mode 1)
@@ -221,6 +230,5 @@
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
 ;; my modes
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'seashell)
 (seashell-minor-mode 1)

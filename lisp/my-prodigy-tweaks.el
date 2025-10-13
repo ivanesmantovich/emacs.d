@@ -1,0 +1,37 @@
+;;; my-prodigy-tweaks.el --- My Prodigy tweaks -*- lexical-binding: t -*-
+
+;;; Code:
+
+(require 'prodigy)
+
+(prodigy-define-service
+  :name "Stream Frontend"
+  :command "yarn"
+  :args '("start")
+  :cwd "~/Developer/work/stream/frontend/app"
+  :tags '(work frontend rsbuild)
+  :stop-signal 'sigkill
+  :kill-process-buffer-on-stop t)
+
+(defun my/get-prodigy-buffer-name (service)
+  "Get the buffer name for a Prodigy SERVICE."
+  (let ((service-name (plist-get service :name)))
+    (format "*prodigy-%s*" 
+            (downcase (replace-regexp-in-string " " "-" service-name)))))
+
+(defun my/clear-prodigy-buffer-hook (tag pattern)
+  "Create a hook function that clears buffer for services with TAG when PATTERN matches output."
+  (lambda (service output)
+    (when (and (member tag (plist-get service :tags))
+               (string-match-p pattern output))
+      (when-let ((buf (get-buffer (my/get-prodigy-buffer-name service))))
+        (with-current-buffer buf
+          (let ((inhibit-read-only t))
+            (erase-buffer)))))))
+
+;; Clear RSBuild buffers on new builds
+(add-hook 'prodigy-process-on-output-hook
+          (my/clear-prodigy-buffer-hook 'rsbuild "^start   "))
+
+(provide 'my-prodigy-tweaks)
+;;; my-prodigy-tweaks.el ends here
