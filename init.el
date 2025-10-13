@@ -221,13 +221,18 @@
 
 ;; compile.el tweaks
 (with-eval-after-load 'compile
-  ;; RSBuild/Webpack TypeScript errors
   (add-to-list 'compilation-error-regexp-alist-alist
                '(rsbuild-typescript
                  "^ERROR in \\([^
 ]+\\):\\([0-9]+\\):\\([0-9]+\\)"
                  1 2 3 2))
   (add-to-list 'compilation-error-regexp-alist 'rsbuild-typescript)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(angular-webpack
+                 "^Error: \\([^:
+]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                 1 2 3 2))
+  (add-to-list 'compilation-error-regexp-alist 'angular-webpack)
   (require 'ansi-color)
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 

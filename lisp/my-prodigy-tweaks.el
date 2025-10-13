@@ -5,6 +5,16 @@
 (require 'prodigy)
 
 (prodigy-define-service
+  :name "Talk Frontend"
+  :command "npm"
+  :args '("run" "start")
+  :env '(("CI" "true"))
+  :cwd "~/Developer/work/talk/frontend"
+  :tags '(work frontend webpack)
+  :stop-signal 'sigkill
+  :kill-process-buffer-on-stop t)
+
+(prodigy-define-service
   :name "Stream Frontend"
   :command "yarn"
   :args '("start")
@@ -33,6 +43,10 @@
 (add-hook 'prodigy-process-on-output-hook
           (my/clear-prodigy-buffer-hook 'rsbuild "^start   "))
 
+;; Clear Webpack buffers on new builds
+(add-hook 'prodigy-process-on-output-hook
+          (my/clear-prodigy-buffer-hook 'webpack "Browser application bundle generation complete"))
+
 (defun my/prodigy-start-and-show ()
   "Start service and display its output after a short delay."
   (interactive)
@@ -42,6 +56,9 @@
     (run-with-timer 1.0 nil
                     (lambda ()
                       (when-let ((buf (get-buffer buffer-name)))
+                        (with-current-buffer buf
+                          (unless (eq major-mode 'prodigy-view-mode)
+                            (prodigy-view-mode)))
                         (save-selected-window
                           (display-buffer buf)))))))
 

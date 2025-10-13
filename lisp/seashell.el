@@ -52,6 +52,7 @@ If already at indentation, delete the indentation without saving to kill ring."
     (define-key map (kbd "s-<backspace>") 'my/kill-to-indentation)
     
     (define-key map (kbd "s-g") 'magit-status)
+    (define-key map (kbd "s-p") 'prodigy)
        
     (define-key map (kbd "C-;") 'avy-goto-char)
     (define-key map (kbd "C-'") 'avy-goto-char-2)
