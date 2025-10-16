@@ -23,6 +23,7 @@
 (electric-pair-mode 1)
 (savehist-mode 1)
 (recentf-mode 1)
+(global-so-long-mode 1)
 
 ;; setup
 (setq mac-option-modifier 'meta)
@@ -36,6 +37,13 @@
 (setq recentf-max-saved-items 500)
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
 (load custom-file 'noerror)				     ; redirect custom
+
+;; redirect auto-saves
+(defvar auto-save-dir
+  (concat user-emacs-directory "auto-saved-files/"))
+(make-directory auto-save-dir t)
+(setq auto-save-file-name-transforms
+      `((".*" ,auto-save-dir t)))
 
 ;; face
 (set-face-attribute 'default nil :family "TX-02" :height 170)
@@ -82,6 +90,9 @@
 
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
+(add-hook 'dired-mode-hook 'dired-hide-details-mode) ;  press ( to toggle details
+(setq dired-use-ls-dired t)
+(setq dired-listing-switches "-aoh --group-directories-first")
 
 ;; org
 (defun my-org-font-setup ()

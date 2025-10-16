@@ -61,7 +61,9 @@ If already at indentation, delete the indentation without saving to kill ring."
     (define-key map (kbd "C-,") 'consult-buffer)
     (define-key map (kbd "M-s f") 'consult-fd)
     (define-key map (kbd "M-s g") 'consult-ripgrep)
-    (define-key map (kbd "M-g r") 'consult-recent-file)
+    (define-key map (kbd "M-s i") 'consult-imenu)
+    (define-key map (kbd "M-s S-i") 'consult-imenu-multi)
+    (define-key map (kbd "M-s r") 'consult-recent-file)
     
     (define-key map (kbd "C-.") 'embark-act)
     (define-key map (kbd "M-.") 'embark-dwim)

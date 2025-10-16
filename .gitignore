@@ -1,6 +1,7 @@
 /elpa
 /eln-cache
 /auto-save-list
+/auto-saved-files
 /eshell
 /transient
 /tree-sitter
@@ -9,6 +10,7 @@
 history
 recentf
 projects
+bookmarks
 custom.el
 reverse-im-cache.el
 .DS_Store
