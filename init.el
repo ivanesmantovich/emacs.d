@@ -165,7 +165,6 @@
 	'((execute-extended-command
 	   (vertico-sort-function . vertico-sort-history-length-alpha)))))
 
-;; TODO: integrate consult-compile-error and consult-flymake as well https://github.com/minad/consult?tab=readme-ov-file#compilation
 ;; TODO: create a separate command with --base passed to consult-fd-args to search only for filenames.
 (use-package consult
   :vc (:url "https://github.com/minad/consult"
@@ -173,7 +172,8 @@
   :config
   (require 'consult-compile)
   (setq xref-show-xrefs-function #'consult-xref ; use consult to view xref locations
-	xref-show-definitions-function #'consult-xref))
+	xref-show-definitions-function #'consult-xref)
+  (setq consult-preview-key '(:debounce 0.25 any)))
 
 (use-package embark)
 
