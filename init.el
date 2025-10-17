@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
+;; Happy hacking!
+
 (defun my/add-to-paths (dir)
   "Add DIR to both exec-path and PATH environment variable if it exists."
   (when (file-directory-p dir)
@@ -49,7 +51,7 @@
 (set-face-attribute 'default nil :family "TX-02" :height 170)
 (set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
-;; note to self: use deepwiki and claude to understand any package. happy hacking!
+;; note to self: use deepwiki and claude to understand any package
 
 ;; package
 (require 'package)
@@ -86,7 +88,9 @@
   :config
   (reverse-im-mode t))
 
-(use-package avy)
+(use-package avy
+  :config
+  (setq avy-timeout-seconds 0.3))
 
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
@@ -165,7 +169,6 @@
 	'((execute-extended-command
 	   (vertico-sort-function . vertico-sort-history-length-alpha)))))
 
-;; TODO: create a separate command with --base passed to consult-fd-args to search only for filenames.
 (use-package consult
   :vc (:url "https://github.com/minad/consult"
 	    :rev "2.8")
@@ -173,7 +176,7 @@
   (require 'consult-compile)
   (setq xref-show-xrefs-function #'consult-xref ; use consult to view xref locations
 	xref-show-definitions-function #'consult-xref)
-  (setq consult-preview-key '(:debounce 0.25 any)))
+  (setq consult-preview-key '(:debounce 0.25 any))) ; TODO: Сделать debounce только на fd, в селектах, в которых все бафферы предзагружены debounce не нужен
 
 (use-package embark)
 

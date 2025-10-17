@@ -54,12 +54,10 @@ If already at indentation, delete the indentation without saving to kill ring."
     (define-key map (kbd "s-g") 'magit-status)
     (define-key map (kbd "s-p") 'prodigy)
        
-    (define-key map (kbd "C-;") 'avy-goto-char)
-    (define-key map (kbd "C-'") 'avy-goto-char-2)
-    (define-key map (kbd "M-g l") 'avy-goto-line)
+    (define-key map (kbd "C-j") 'avy-goto-char-timer)
     
     (define-key map (kbd "C-,") 'consult-buffer)
-    (define-key map (kbd "M-s f") 'consult-fd)
+    (define-key map (kbd "C-t") 'consult-fd) ;; TODO: create a separate command with --base passed to consult-fd-args to search only for filenames.
     (define-key map (kbd "M-s g") 'consult-ripgrep)
     (define-key map (kbd "M-s i") 'consult-imenu)
     (define-key map (kbd "M-s S-i") 'consult-imenu-multi)
