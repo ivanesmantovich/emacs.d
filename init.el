@@ -12,7 +12,8 @@
 
 (my/add-to-paths "/opt/homebrew/bin")
 (my/add-to-paths (expand-file-name "~/.local/share/fnm/aliases/default/bin")) ; fnm bin dir
-(my/add-to-paths "/opt/homebrew/opt/coreutils/libexec/gnubin")
+(my/add-to-paths "/opt/homebrew/opt//libexec/gnubin")
+(my/add-to-paths "~/.cargo/bin")
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -138,6 +139,12 @@
 (add-hook 'html-mode-hook 'eglot-ensure)
 (add-hook 'css-mode-hook 'eglot-ensure)
 
+;; NOTE: Try disabling this after upgrading to Emacs 30
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  :after eglot
+  :config (eglot-booster-mode))
+
 (use-package corfu
   :vc (:url "https://github.com/minad/corfu"
        :rev "2.3")
@@ -148,8 +155,8 @@
   (corfu-popupinfo-mode)
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.2)
-  (corfu-popupinfo-delay 0.5)
+  (corfu-auto-delay 0.1)
+  (corfu-popupinfo-delay 0.3)
   (corfu-quit-no-match t))
 
 (use-package vertico
