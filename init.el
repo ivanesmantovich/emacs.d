@@ -12,7 +12,7 @@
 
 (my/add-to-paths "/opt/homebrew/bin")
 (my/add-to-paths (expand-file-name "~/.local/share/fnm/aliases/default/bin")) ; fnm bin dir
-(my/add-to-paths "/opt/homebrew/opt//libexec/gnubin")
+(my/add-to-paths "/opt/homebrew/opt/coreutils/libexec/gnubin")
 (my/add-to-paths "~/.cargo/bin")
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
@@ -33,6 +33,7 @@
 (setq mac-command-modifier 'super)
 (setq native-comp-async-report-warnings-errors 'silent)      ; silence byte-compilation
 (setq byte-compile-warnings nil)                             ; silence byte-compilation
+(setq inhibit-splash-screen t)
 (setq make-backup-files nil)		                     ; disable backup
 (setq ring-bell-function 'ignore)	                     ; disable bell
 (setq enable-recursive-minibuffers t)
@@ -49,7 +50,7 @@
       `((".*" ,auto-save-dir t)))
 
 ;; face
-(set-face-attribute 'default nil :family "TX-02" :height 170)
+(set-face-attribute 'default nil :family "TX-02" :height 180)
 (set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
 ;; note to self: use deepwiki and claude to understand any package
