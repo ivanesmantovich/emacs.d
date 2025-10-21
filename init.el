@@ -2,22 +2,6 @@
 
 ;; Happy hacking!
 
-(defun my/add-to-paths (dir)
-  "Add DIR to both exec-path and PATH environment variable if it exists."
-  (when (file-directory-p dir)
-    (add-to-list 'exec-path dir)
-    (let ((path (getenv "PATH")))
-      (unless (string-match-p (regexp-quote dir) path)
-        (setenv "PATH" (concat dir ":" path))))))
-
-(my/add-to-paths "/opt/homebrew/bin")
-(my/add-to-paths (expand-file-name "~/.local/share/fnm/aliases/default/bin")) ; fnm bin dir
-(my/add-to-paths "/opt/homebrew/opt/coreutils/libexec/gnubin")
-(my/add-to-paths "~/.cargo/bin")
-;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
-;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
 (add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
 
 (blink-cursor-mode 0)
@@ -55,6 +39,21 @@
 
 ;; note to self: use deepwiki and claude to understand any package
 
+;; dependencies
+(require 'compat)
+(require 'dash)
+(require 's)
+(require 'f)
+(require 'transient)
+(require 'cond-let)
+(require 'llama)
+(require 'with-editor)
+
+;; packages
+(require 'magit)
+
+(setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+
 ;; package
 (require 'package)
 (setq package-archives
@@ -71,11 +70,7 @@
   :vc (:url "https://github.com/protesilaos/modus-themes"
        :rev "4.8.0")
   :config
-  (load-theme 'modus-vivendi-tinted :no-confirm))
-
-(use-package magit
-  :config
-  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (load-theme 'modus-operandi-tinted :no-confirm))
 
 (use-package diff-hl
   :config
@@ -90,9 +85,8 @@
   :config
   (reverse-im-mode t))
 
-(use-package avy
-  :config
-  (setq avy-timeout-seconds 0.3))
+(require 'avy)
+(setq avy-timeout-seconds 0.3)
 
 ;; dired
 (put 'dired-find-alternate-file 'disabled nil) ; enable alternate command, that replaces the current buffer
@@ -186,11 +180,11 @@
 	xref-show-definitions-function #'consult-xref)
   (setq consult-preview-key '(:debounce 0.25 any))) ; TODO: Сделать debounce только на fd, в селектах, в которых все бафферы предзагружены debounce не нужен
 
-(use-package embark)
+;; (use-package embark)
 
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+;; (use-package embark-consult
+;;   :hook
+;;   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package orderless
   :vc (:url "https://github.com/oantolin/orderless"
@@ -205,13 +199,13 @@
   :init
   (marginalia-mode))
 
-(use-package prodigy
-  :config
-  (add-hook 'prodigy-view-mode-hook
-	    (lambda ()
-	      (compilation-minor-mode 1)))
-  (require 'my-prodigy-tweaks))
+(require 'prodigy)
+(require 'my-prodigy-tweaks)
+(add-hook 'prodigy-view-mode-hook
+	  (lambda ()
+	    (compilation-minor-mode 1)))
 
+;; TODO: which-key is built-in in Emacs 30
 (use-package which-key
   :config
   (which-key-mode 1)
