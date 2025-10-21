@@ -50,6 +50,7 @@
 (require 'with-editor)
 
 ;; packages
+(require 'reverse-im)
 (require 'modus-themes)
 (require 'magit)
 (require 'diff-hl)
@@ -62,10 +63,18 @@
 (require 'seashell)
 (require 'my-commands)
 
-(load-theme 'modus-operandi-tinted :no-confirm)
+;; reverse-im
+(setq reverse-im-input-methods '("russian-computer")
+      reverse-im-cache-file (locate-user-emacs-file "reverse-im-cache.el"))
+(reverse-im-mode t) 
 
+;; modus-theme
+(load-theme 'modus-vivendi-tinted :no-confirm)
+
+;; magit
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
+;; diff-hl
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; package
@@ -80,14 +89,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package reverse-im
-  :demand t
-  :custom
-  (reverse-im-input-methods '("russian-computer"))
-  (reverse-im-cache-file (locate-user-emacs-file "reverse-im-cache.el"))
-  :config
-  (reverse-im-mode t))
-
+;; avy
 (require 'avy)
 (setq avy-timeout-seconds 0.3)
 
@@ -178,10 +180,19 @@
   :vc (:url "https://github.com/minad/consult"
 	    :rev "2.8")
   :config
-  (require 'consult-compile)
-  (setq xref-show-xrefs-function #'consult-xref ; use consult to view xref locations
-	xref-show-definitions-function #'consult-xref)
-  (setq consult-preview-key '(:debounce 0.25 any))) ; TODO: Сделать debounce только на fd, в селектах, в которых все бафферы предзагружены debounce не нужен
+  (require 'consult-compile))
+
+;; consult
+(consult-customize
+ consult-fd
+ consult-find
+ consult-ripgrep
+ consult-grep
+ consult-git-grep
+ :preview-key '(:debounce 0.25 any))
+
+(setq xref-show-xrefs-function #'consult-xref
+      xref-show-definitions-function #'consult-xref)
 
 ;; (use-package embark)
 
