@@ -53,6 +53,8 @@ If already at indentation, delete the indentation without saving to kill ring."
     
     (define-key map (kbd "s-g") 'magit-status)
     (define-key map (kbd "s-p") 'prodigy)
+
+    ;; TODO: incredible commands to bind: diff-hl-show-hunk, consult-yank-from-kill-ring, consult-mark, consult-global-mark
        
     (define-key map (kbd "C-j") 'avy-goto-char-timer)
     

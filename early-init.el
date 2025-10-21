@@ -1,5 +1,6 @@
 ;;; early-init.el --- Early initialization -*- lexical-binding: t -*-
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (let ((packages-dir (expand-file-name "lisp/packages" user-emacs-directory)))
   (push packages-dir load-path)
   (let ((default-directory packages-dir))
@@ -19,6 +20,5 @@
 (my/add-to-paths "~/.cargo/bin")
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;;; early-init.el ends here

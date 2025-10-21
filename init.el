@@ -50,9 +50,23 @@
 (require 'with-editor)
 
 ;; packages
+(require 'modus-themes)
 (require 'magit)
+(require 'diff-hl)
+(require 'prodigy)
+
+;; my package modifications
+(require 'my-prodigy-modifications)
+
+;; my packages and modes
+(require 'seashell)
+(require 'my-commands)
+
+(load-theme 'modus-operandi-tinted :no-confirm)
 
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+
+(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; package
 (require 'package)
@@ -65,17 +79,6 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-(use-package modus-themes
-  :vc (:url "https://github.com/protesilaos/modus-themes"
-       :rev "4.8.0")
-  :config
-  (load-theme 'modus-operandi-tinted :no-confirm))
-
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package reverse-im
   :demand t
@@ -199,8 +202,6 @@
   :init
   (marginalia-mode))
 
-(require 'prodigy)
-(require 'my-prodigy-tweaks)
 (add-hook 'prodigy-view-mode-hook
 	  (lambda ()
 	    (compilation-minor-mode 1)))
@@ -224,7 +225,7 @@
                (display-buffer-at-bottom)
                (window-height . 0.25)))
 
-;; project.el tweaks
+;; project.el modifications
 (defun my-project-try-local (dir)
   "Check if DIR contains a .project file."
   (let ((root (locate-dominating-file dir ".project")))
@@ -232,10 +233,10 @@
       (cons 'transient root))))
 (add-hook 'project-find-functions #'my-project-try-local nil nil) ;; add to the beginning of project-find-functions
 
-;; shell.el tweaks
+;; shell.el modifications
 (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
 
-;; compile.el tweaks
+;; compile.el modifications
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(rsbuild-typescript
@@ -252,8 +253,4 @@
   (require 'ansi-color)
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
-;; my modes
-(require 'seashell)
 (seashell-minor-mode 1)
-
-(require 'my-commands)

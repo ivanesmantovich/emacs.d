@@ -1,4 +1,4 @@
-;;; my-prodigy-tweaks.el --- My Prodigy tweaks -*- lexical-binding: t -*-
+;;; my-prodigy-modifications.el --- My Prodigy modifications -*- lexical-binding: t -*-
 
 ;;; Code:
 
@@ -64,5 +64,5 @@
 
 (define-key prodigy-mode-map "s" 'my/prodigy-start-and-show)
 
-(provide 'my-prodigy-tweaks)
-;;; my-prodigy-tweaks.el ends here
+(provide 'my-prodigy-modifications)
+;;; my-prodigy-modifications.el ends here
