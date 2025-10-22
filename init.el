@@ -55,6 +55,7 @@
 (require 'magit)
 (require 'diff-hl)
 (require 'prodigy)
+(require 'cape)
 
 ;; my package modifications
 (require 'my-prodigy-modifications)
@@ -125,6 +126,7 @@
         (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
         (css "https://github.com/tree-sitter/tree-sitter-css" "master" "src")
         (html "https://github.com/tree-sitter/tree-sitter-html" "master" "src")))
+(add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
@@ -138,12 +140,23 @@
 (add-hook 'js-ts-mode-hook 'eglot-ensure)
 (add-hook 'html-mode-hook 'eglot-ensure)
 (add-hook 'css-mode-hook 'eglot-ensure)
+(add-hook 'css-ts-mode-hook 'eglot-ensure)
 
 ;; NOTE: Try disabling this after upgrading to Emacs 30
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
+
+;; dabbrev
+(require 'dabbrev)
+(setq dabbrev-case-fold-search t)
+(setq dabbrev-case-replace nil)
+
+;; TODO: enable it in all modes, not just CSS
+(add-hook 'css-ts-mode-hook
+          (lambda ()
+            (add-hook 'completion-at-point-functions #'cape-dabbrev 90 t)))
 
 (use-package corfu
   :vc (:url "https://github.com/minad/corfu"
