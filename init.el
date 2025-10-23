@@ -50,12 +50,15 @@
 (require 'with-editor)
 
 ;; packages
+(require 'elisp-demos)
+(require 'helpful)
 (require 'reverse-im)
 (require 'modus-themes)
 (require 'magit)
 (require 'diff-hl)
 (require 'prodigy)
 (require 'cape)
+;; TODO: extract helpers and dependencies like elisp-demos.org or f.el/s.el into subdir
 
 ;; my package modifications
 (require 'my-prodigy-modifications)
@@ -63,6 +66,9 @@
 ;; my packages and modes
 (require 'seashell)
 (require 'my-commands)
+
+(advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
+(advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
 
 ;; reverse-im
 (setq reverse-im-input-methods '("russian-computer")
@@ -108,7 +114,7 @@
   :hook ((org-mode . my-org-font-setup)
 	 (org-mode . visual-line-mode))
   :custom
-  (org-image-actual-width 800)
+  (org-image-actual-width 500)
   (org-startup-with-inline-images t)
   :config
   (custom-set-faces
