@@ -1,6 +1,6 @@
-;;; -*- lexical-binding: t -*-
+;;; init.el --- Happy hacking! -*- lexical-binding: t -*-
 
-;; Happy hacking!
+(add-to-list 'Info-directory-list (expand-file-name "lisp/packages/info" user-emacs-directory))
 
 (add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
 
@@ -58,6 +58,8 @@
 (require 'diff-hl)
 (require 'prodigy)
 (require 'cape)
+(require 'embark)
+(require 'embark-consult)
 ;; TODO: extract helpers and dependencies like elisp-demos.org or f.el/s.el into subdir
 
 ;; my package modifications
@@ -213,11 +215,7 @@
 (setq xref-show-xrefs-function #'consult-xref
       xref-show-definitions-function #'consult-xref)
 
-;; (use-package embark)
-
-;; (use-package embark-consult
-;;   :hook
-;;   (embark-collect-mode . consult-preview-at-point-mode))
+(add-hook 'embark-collect-mode-hook 'consult-preview-at-point-mode)
 
 (use-package orderless
   :vc (:url "https://github.com/oantolin/orderless"

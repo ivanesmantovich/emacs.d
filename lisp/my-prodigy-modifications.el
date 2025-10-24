@@ -23,6 +23,15 @@
   :stop-signal 'sigkill
   :kill-process-buffer-on-stop t)
 
+(prodigy-define-service
+  :name "Landings Frontend"
+  :command "yarn"
+  :args '("start")
+  :cwd "~/Developer/work/landings/frontend"
+  :tags '(work frontend webpack)
+  :stop-signal 'sigkill
+  :kill-process-buffer-on-stop t)
+
 (defun my/get-prodigy-buffer-name (service)
   "Get the buffer name for a Prodigy SERVICE."
   (let ((service-name (plist-get service :name)))
