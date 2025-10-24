@@ -1,28 +1,9 @@
 ;;; init.el --- Happy hacking! -*- lexical-binding: t -*-
 
-(add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
-
-;; setup TODO: extract to early-init.el
-(setq mac-option-modifier 'meta
-      mac-command-modifier 'super
-      native-comp-async-report-warnings-errors 'silent      ; silence byte-compilation
-      byte-compile-warnings nil                             ; silence byte-compilation
-      inhibit-splash-screen t
-      make-backup-files nil
-      ring-bell-function 'ignore
-      enable-recursive-minibuffers t
-      gs-cons-threshold (* 100 1024 1024)                   ; gc tweak, keep it simple. gcmh package is an alternative
-      recentf-max-saved-items 500
-      custom-file (expand-file-name "~/.emacs.d/custom.el"))
-
 ;; redirect auto-saves
 (defvar auto-save-dir (concat user-emacs-directory "auto-saved-files/"))
 (make-directory auto-save-dir t)
 (setq auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
-
-;; face
-(set-face-attribute 'default nil :family "TX-02" :height 180)
-(set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
 (load custom-file 'noerror)
 
@@ -76,7 +57,9 @@
 (add-to-list 'Info-directory-list (expand-file-name "lisp/packages/info" user-emacs-directory))
 
 ;; package values
-(setq dired-use-ls-dired t
+(setq recentf-max-saved-items 500
+      
+      dired-use-ls-dired t
       dired-listing-switches "-aoh --group-directories-first"
       
       reverse-im-input-methods '("russian-computer")
@@ -102,6 +85,7 @@
       corfu-popupinfo-delay 0.3
       corfu-quit-no-match t
 
+      enable-recursive-minibuffers t
       vertico-cycle t
       vertico-count 20
       vertico-multiform-commands '((execute-extended-command
@@ -133,6 +117,7 @@
 (vertico-multiform-mode)
 (marginalia-mode)
 (which-key-mode)
+(seashell-minor-mode 1)
 
 ;; file-based major modes
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-ts-mode))
@@ -168,7 +153,9 @@
 ;; allow disabled commands 
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; org
+;; face
+(set-face-attribute 'default nil :family "TX-02" :height 180)
+(set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 (custom-set-faces
    '(org-level-1 ((t (:family "Alegreya" :height 220))))
    '(org-level-2 ((t (:family "Alegreya" :height 210))))
@@ -200,6 +187,7 @@
  consult-ripgrep
  consult-grep
  consult-git-grep
+ consult-buffer
  :preview-key '(:debounce 0.25 any))
 
 ;; xref.el
@@ -225,7 +213,5 @@
     (add-to-list 'compilation-error-regexp-alist-alist pattern)
     (add-to-list 'compilation-error-regexp-alist (car pattern)))
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-
-(seashell-minor-mode 1)
 
 ;; note to self: use deepwiki and claude to understand any package

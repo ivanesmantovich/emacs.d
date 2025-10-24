@@ -21,4 +21,17 @@
 ;; (my/add-to-path "/opt/homebrew/opt/findutils/libexec/gnubin") ; TODO do i need findutils?
 ;; (my/add-to-path "/opt/homebrew/opt/gnu-sed/libexec/gnubin")
 
+(add-to-list 'default-frame-alist '(fullscreen . fullscreen))
+
+;; setup
+(setq mac-option-modifier 'meta
+      mac-command-modifier 'super
+      native-comp-async-report-warnings-errors 'silent
+      byte-compile-warnings nil
+      inhibit-splash-screen t
+      make-backup-files nil
+      ring-bell-function 'ignore
+      gc-cons-threshold (* 100 1024 1024) ; gc tweak, keep it simple. gcmh package is an alternative
+      custom-file (expand-file-name "~/.emacs.d/custom.el"))
+
 ;;; early-init.el ends here
