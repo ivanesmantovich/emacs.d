@@ -102,18 +102,6 @@
 (global-diff-hl-mode)
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
-;; package
-(require 'package)
-(setq package-archives
-      '(("gnu"   . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
-(setq package-install-upgrade-built-in t)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
-
 ;; avy
 (require 'avy)
 (setq avy-timeout-seconds 0.3)
@@ -125,23 +113,18 @@
 (setq dired-listing-switches "-aoh --group-directories-first")
 
 ;; org
-(defun my-org-font-setup ()
-  "Use Alegreya in org-mode buffers."
-  (face-remap-add-relative 'default :family "Alegreya" :height 200))
-(use-package org
-  :hook ((org-mode . my-org-font-setup)
-	 (org-mode . visual-line-mode))
-  :custom
-  (org-image-actual-width 500)
-  (org-startup-with-inline-images t)
-  :config
-  (custom-set-faces
+(setq org-image-actual-width 500
+      org-startup-with-inline-images t)
+(custom-set-faces
    '(org-level-1 ((t (:family "Alegreya" :height 220))))
    '(org-level-2 ((t (:family "Alegreya" :height 210))))
    '(org-level-3 ((t (:family "Alegreya" :height 200))))
    '(org-block ((t (:family "TX-02" :height 160))))
    '(org-code ((t (:family "TX-02" :height 160))))
-   '(org-verbatim ((t (:family "TX-02" :height 160))))))
+   '(org-verbatim ((t (:family "TX-02" :height 160)))))
+(add-hook 'org-mode-hook (lambda ()
+			   (face-remap-add-relative 'default :family "Alegreya" :height 200)))
+(add-hook 'org-mode-hook 'visual-line-mode)
 
 ;; treesitter
 (setq treesit-language-source-alist
