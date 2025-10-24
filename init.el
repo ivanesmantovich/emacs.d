@@ -1,7 +1,5 @@
 ;;; init.el --- Happy hacking! -*- lexical-binding: t -*-
 
-(add-to-list 'Info-directory-list (expand-file-name "lisp/packages/info" user-emacs-directory))
-
 (add-to-list 'default-frame-alist '(fullscreen . fullscreen)) ; start in fullscreen
 
 (blink-cursor-mode 0)
@@ -13,76 +11,76 @@
 (global-so-long-mode 1)
 
 ;; setup
-(setq mac-option-modifier 'meta)
-(setq mac-command-modifier 'super)
-(setq native-comp-async-report-warnings-errors 'silent)      ; silence byte-compilation
-(setq byte-compile-warnings nil)                             ; silence byte-compilation
-(setq inhibit-splash-screen t)
-(setq make-backup-files nil)		                     ; disable backup
-(setq ring-bell-function 'ignore)	                     ; disable bell
-(setq enable-recursive-minibuffers t)
-(setq gs-cons-threshold (* 100 1024 1024))                   ; gc tweak, keep it simple. gcmh package is an alternative
-(setq recentf-max-saved-items 500)
-(setq custom-file (expand-file-name "~/.emacs.d/custom.el")) ; redirect custom
-(load custom-file 'noerror)				     ; redirect custom
+(setq mac-option-modifier 'meta
+      mac-command-modifier 'super
+      native-comp-async-report-warnings-errors 'silent      ; silence byte-compilation
+      byte-compile-warnings nil                             ; silence byte-compilation
+      inhibit-splash-screen t
+      make-backup-files nil
+      ring-bell-function 'ignore
+      enable-recursive-minibuffers t
+      gs-cons-threshold (* 100 1024 1024)                   ; gc tweak, keep it simple. gcmh package is an alternative
+      recentf-max-saved-items 500
+      custom-file (expand-file-name "~/.emacs.d/custom.el"))
 
 ;; redirect auto-saves
-(defvar auto-save-dir
-  (concat user-emacs-directory "auto-saved-files/"))
+(defvar auto-save-dir (concat user-emacs-directory "auto-saved-files/"))
 (make-directory auto-save-dir t)
-(setq auto-save-file-name-transforms
-      `((".*" ,auto-save-dir t)))
+(setq auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
 
 ;; face
 (set-face-attribute 'default nil :family "TX-02" :height 180)
 (set-fontset-font t 'cyrillic (font-spec :family "SF Mono") nil 'append) ; fallback
 
-;; note to self: use deepwiki and claude to understand any package
-
-;; dependencies
-(require 'compat)
-(require 'dash)
-(require 's)
-(require 'f)
-(require 'transient)
-(require 'cond-let)
-(require 'llama)
-(require 'with-editor)
+(load custom-file 'noerror)
 
 ;; packages
-(require 'elisp-demos)
-(require 'helpful)
-(require 'reverse-im)
-(require 'modus-themes)
-(require 'magit)
-(require 'diff-hl)
-(require 'prodigy)
-(require 'html-ts-mode)			; will be built-in in Emacs 30
-(require 'cape)
-(require 'eglot)
-(require 'eglot-booster)		; try disabling this after upgrading to Emacs 30
-(require 'corfu)
-(require 'corfu-popupinfo)
-(require 'vertico)
-(require 'vertico-multiform)
-(require 'vertico-sort)
-(require 'consult)
-(require 'consult-compile)
-(require 'orderless)
-(require 'marginalia)
-(require 'embark)
-(require 'embark-consult)
-(require 'which-key)			; will be built-in in Emacs 30
-(require 'diminish)
+(mapc #'require '(compat		; dependencies
+		  dash
+		  s
+		  f
+		  transient
+		  llama
+		  with-editor
+
+		  info			; built-in
+		  compile
+		  ansi-color
+
+		  elisp-demos		; community
+                  helpful
+                  reverse-im
+                  modus-themes
+                  magit
+		  avy
+                  diff-hl
+                  prodigy
+                  html-ts-mode          ; note: will be built-in in Emacs 30
+                  cape
+                  eglot
+                  eglot-booster         ; todo: try disabling this after upgrading to Emacs 30
+                  corfu
+                  corfu-popupinfo
+                  vertico
+                  vertico-multiform
+                  vertico-sort
+                  consult
+                  consult-compile
+                  orderless
+                  marginalia
+                  embark
+                  embark-consult
+                  which-key             ; note: will be built-in in Emacs 30
+                  diminish
+
+		  my-prodigy-modifications
+
+		  seashell		; my packages
+		  my-commands))
 ;; TODO: extract helpers and dependencies like elisp-demos.org or f.el/s.el into subdir
 ;; TODO: flymake-jsts has biome and eslint support and afaik easily customzible to add support for other tools
 
-;; my package modifications
-(require 'my-prodigy-modifications)
-
-;; my packages and modes
-(require 'seashell)
-(require 'my-commands)
+(add-to-list 'Info-directory-list (expand-file-name "lisp/packages/info" user-emacs-directory))
 
 (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
 (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
@@ -103,7 +101,6 @@
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; avy
-(require 'avy)
 (setq avy-timeout-seconds 0.3)
 
 ;; dired
@@ -154,7 +151,6 @@
 (eglot-booster-mode)
 
 ;; dabbrev
-(require 'dabbrev)
 (setq dabbrev-case-fold-search t)
 (setq dabbrev-case-replace nil)
 
@@ -221,31 +217,27 @@
 				     (window-height . 0.25)))
 
 ;; project.el modifications
-(defun my-project-try-local (dir)
+(defun my/project-try-local (dir)
   "Check if DIR contains a .project file."
   (let ((root (locate-dominating-file dir ".project"))) ; TODO: use dir-locals.el instead of .project
     (when root
       (cons 'transient root))))
-(add-hook 'project-find-functions #'my-project-try-local nil nil) ;; add to the beginning of project-find-functions
+(add-hook 'project-find-functions #'my/project-try-local nil nil) ;; add to the beginning of project-find-functions
 
 ;; shell.el modifications
 (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
 
 ;; compile.el modifications
-(with-eval-after-load 'compile
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(rsbuild-typescript
-                 "^ERROR in \\([^
-]+\\):\\([0-9]+\\):\\([0-9]+\\)"
-                 1 2 3 2))
-  (add-to-list 'compilation-error-regexp-alist 'rsbuild-typescript)
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(angular-webpack
-                 "^Error: \\([^:
-]+\\):\\([0-9]+\\):\\([0-9]+\\)"
-                 1 2 3 2))
-  (add-to-list 'compilation-error-regexp-alist 'angular-webpack)
-  (require 'ansi-color)
-  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
+(dolist (pattern '((rsbuild-typescript
+                      "^ERROR in \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                      1 2 3 2)
+                     (angular-webpack
+                      "^Error: \\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                      1 2 3 2)))
+    (add-to-list 'compilation-error-regexp-alist-alist pattern)
+    (add-to-list 'compilation-error-regexp-alist (car pattern)))
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 (seashell-minor-mode 1)
+
+;; note to self: use deepwiki and claude to understand any package
