@@ -70,6 +70,7 @@ If already at indentation, delete the indentation without saving to kill ring."
     map)
   "My personal keybindings that override all modes.")
 
+;; TODO: rename it to just seashell-mode
 (define-minor-mode seashell-minor-mode
   "A minor mode for my personal keybindings that override all modes."
   :init-value t

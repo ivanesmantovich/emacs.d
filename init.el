@@ -50,7 +50,6 @@
 
 		  seashell		; my packages
 		  my-commands))
-;; TODO: extract helpers and dependencies like elisp-demos.org or f.el/s.el into subdir
 ;; TODO: flymake-jsts has biome and eslint support and afaik easily customzible to add support for other tools
 
 ;; package info
