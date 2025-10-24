@@ -57,10 +57,25 @@
 (require 'magit)
 (require 'diff-hl)
 (require 'prodigy)
+(require 'html-ts-mode)			; will be built-in in Emacs 30
 (require 'cape)
+(require 'eglot)
+(require 'eglot-booster)		; try disabling this after upgrading to Emacs 30
+(require 'corfu)
+(require 'corfu-popupinfo)
+(require 'vertico)
+(require 'vertico-multiform)
+(require 'vertico-sort)
+(require 'consult)
+(require 'consult-compile)
+(require 'orderless)
+(require 'marginalia)
 (require 'embark)
 (require 'embark-consult)
+(require 'which-key)			; will be built-in in Emacs 30
+(require 'diminish)
 ;; TODO: extract helpers and dependencies like elisp-demos.org or f.el/s.el into subdir
+;; TODO: flymake-jsts has biome and eslint support and afaik easily customzible to add support for other tools
 
 ;; my package modifications
 (require 'my-prodigy-modifications)
@@ -78,12 +93,13 @@
 (reverse-im-mode t) 
 
 ;; modus-theme
-(load-theme 'modus-vivendi-tinted :no-confirm)
+(load-theme 'modus-operandi-tinted :no-confirm)
 
 ;; magit
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
 ;; diff-hl
+(global-diff-hl-mode)
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; package
@@ -133,7 +149,8 @@
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
         (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
         (css "https://github.com/tree-sitter/tree-sitter-css" "master" "src")
-        (html "https://github.com/tree-sitter/tree-sitter-html" "master" "src")))
+        (html "https://github.com/tree-sitter/tree-sitter-html" "v0.20.1" "src")))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . html-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
@@ -146,15 +163,12 @@
 (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
 (add-hook 'tsx-ts-mode-hook 'eglot-ensure)
 (add-hook 'js-ts-mode-hook 'eglot-ensure)
-(add-hook 'html-mode-hook 'eglot-ensure)
-(add-hook 'css-mode-hook 'eglot-ensure)
-(add-hook 'css-ts-mode-hook 'eglot-ensure)
-
-;; NOTE: Try disabling this after upgrading to Emacs 30
-(use-package eglot-booster
-  :vc (:url "https://github.com/jdtsmith/eglot-booster")
-  :after eglot
-  :config (eglot-booster-mode))
+(add-hook 'css-ts-mode-hook 'eglot-ensure) ; maybe use regular non-ts css and html modes
+(add-hook 'html-ts-mode-hook 'eglot-ensure)
+;; TODO: CSS variables language server
+;; $ npm install -g css-variables-language-server
+;; $ css-variables-language-server --stdio
+(eglot-booster-mode)
 
 ;; dabbrev
 (require 'dabbrev)
@@ -166,44 +180,25 @@
           (lambda ()
             (add-hook 'completion-at-point-functions #'cape-dabbrev 90 t)))
 
-(use-package corfu
-  :vc (:url "https://github.com/minad/corfu"
-       :rev "2.3")
-  :init
-  (global-corfu-mode)
-  (add-to-list 'load-path (expand-file-name "corfu/extensions" package-user-dir))
-  (require 'corfu-popupinfo)
-  (corfu-popupinfo-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.1)
-  (corfu-popupinfo-delay 0.3)
-  (corfu-quit-no-match t))
+;; corfu
+(setq corfu-auto t
+      corfu-auto-delay 0.1
+      corfu-popupinfo-delay 0.3
+      corfu-quit-no-match t)
+(global-corfu-mode)
+(corfu-popupinfo-mode)
 
-(use-package vertico
-  :vc (:url "https://github.com/minad/vertico"
-       :rev "2.5")
-  :custom
-  (vertico-cycle t)
-  (vertico-count 20)
-  :init
-  (vertico-mode)
-  :config
-  (add-to-list 'load-path (expand-file-name "vertico/extensions" package-user-dir))
-  (require 'vertico-multiform)
-  (require 'vertico-sort)
-  (vertico-multiform-mode)
-  (setq vertico-multiform-commands
-	'((execute-extended-command
-	   (vertico-sort-function . vertico-sort-history-length-alpha)))))
-
-(use-package consult
-  :vc (:url "https://github.com/minad/consult"
-	    :rev "2.8")
-  :config
-  (require 'consult-compile))
+;; vertico
+(setq vertico-cycle t
+      vertico-count 20
+      vertico-multiform-commands '((execute-extended-command
+				    (vertico-sort-function . vertico-sort-history-length-alpha))))
+(vertico-mode)
+(vertico-multiform-mode)
 
 ;; consult
+(setq xref-show-xrefs-function #'consult-xref
+      xref-show-definitions-function #'consult-xref)
 (consult-customize
  consult-fd
  consult-find
@@ -212,51 +207,40 @@
  consult-git-grep
  :preview-key '(:debounce 0.25 any))
 
-(setq xref-show-xrefs-function #'consult-xref
-      xref-show-definitions-function #'consult-xref)
-
+;; embark
 (add-hook 'embark-collect-mode-hook 'consult-preview-at-point-mode)
 
-(use-package orderless
-  :vc (:url "https://github.com/oantolin/orderless"
-       :rev "1.5")
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles partial-completion)))))
- 
-(use-package marginalia
-  :vc (:url "https://github.com/minad/marginalia"
-       :rev "2.3")
-  :init
-  (marginalia-mode))
+;; orderless
+(setq completion-styles '(orderless basic))
+(setq completion-category-overrides '((file (styles partial-completion))))
 
+;; marginalia
+(marginalia-mode)
+
+;; prodigy
 (add-hook 'prodigy-view-mode-hook
 	  (lambda ()
 	    (compilation-minor-mode 1)))
 
-;; TODO: which-key is built-in in Emacs 30
-(use-package which-key
-  :config
-  (which-key-mode 1)
-  (setq which-key-idle-delay 0.5)
-  (setq which-key-popup-type 'minibuffer))
+;; which-key
+(setq which-key-idle-delay 0.5
+      which-key-popup-type 'minibuffer)
+(which-key-mode)
 
-(use-package diminish
-  :config
-  (diminish 'which-key-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'eldoc-mode))
+;; diminish
+(mapc #'diminish '(which-key-mode
+		   auto-revert-mode
+		   eldoc-mode))
 
-;; show xref at the bottom
-(add-to-list 'display-buffer-alist
-             '("\\*xref\\*"
-               (display-buffer-at-bottom)
-               (window-height . 0.25)))
+;; xref
+(add-to-list 'display-buffer-alist '("\\*xref\\*"
+				     (display-buffer-at-bottom)
+				     (window-height . 0.25)))
 
 ;; project.el modifications
 (defun my-project-try-local (dir)
   "Check if DIR contains a .project file."
-  (let ((root (locate-dominating-file dir ".project")))
+  (let ((root (locate-dominating-file dir ".project"))) ; TODO: use dir-locals.el instead of .project
     (when root
       (cons 'transient root))))
 (add-hook 'project-find-functions #'my-project-try-local nil nil) ;; add to the beginning of project-find-functions
