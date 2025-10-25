@@ -25,6 +25,7 @@
                   magit
 		  avy
                   diff-hl
+		  diff-hl-show-hunk
                   prodigy
                   html-ts-mode          ; note: will be built-in in Emacs 30
                   cape
@@ -45,6 +46,7 @@
                   diminish
 
 		  my-prodigy-modifications
+		  my-splash-screen
 
 		  seashell		; my packages
 		  my-commands))
@@ -55,6 +57,7 @@
 
 ;; package values
 (setq recentf-max-saved-items 500
+      duplicate-line-final-position 1
       
       dired-use-ls-dired t
       dired-listing-switches "-aoh --group-directories-first"
@@ -76,6 +79,7 @@
       magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
 
       eglot-autoshutdown t
+      eglot-events-buffer-size 0
 
       corfu-auto t	       
       corfu-auto-delay 0.1     
@@ -125,6 +129,7 @@
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-ts-mode))
 
 ;; hooks
+(add-hook 'emacs-startup-hook 'my/splash-screen)
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode) ;  press ( to toggle details
 (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)

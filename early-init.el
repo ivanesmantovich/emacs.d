@@ -13,7 +13,7 @@
       mac-command-modifier 'super
       native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings nil
-      inhibit-splash-screen t
+      inhibit-startup-screen t
       make-backup-files nil
       ring-bell-function 'ignore
       custom-file (expand-file-name "~/.emacs.d/custom.el"))
