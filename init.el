@@ -5,8 +5,6 @@
 (make-directory auto-save-dir t)
 (setq auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
 
-(load custom-file 'noerror)
-
 ;; packages
 (mapc #'require '(compat		; dependencies
 		  dash
@@ -212,5 +210,7 @@
     (add-to-list 'compilation-error-regexp-alist-alist pattern)
     (add-to-list 'compilation-error-regexp-alist (car pattern)))
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+
+(load custom-file 'noerror)
 
 ;; note to self: use deepwiki and claude to understand any package
